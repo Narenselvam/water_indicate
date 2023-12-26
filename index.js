@@ -1,11 +1,30 @@
 import express from 'express';
 import mongoose from'mongoose';
 import {PORT,MONGO_URL} from './config.js'
+import {Data} from './models/datamodel.js'
+import dataRoute from './Routes/dataRoute.js'
+import cors from 'cors';
 
 
 const app=express();
 
 app.use(express.json());
+
+
+
+app.get("/",async (req,res)=>{
+    try{
+        const data=await Data.find({});
+        return res.status(200).send(data);
+    }
+    catch(err){
+        console.log(err.message);
+        res.send(err);
+    }
+})
+
+app.use(cors());
+app.use('/data',dataRoute)
 
 const connectstr=MONGO_URL
 mongoose.connect(connectstr).then(()=>{
@@ -15,30 +34,8 @@ mongoose.connect(connectstr).then(()=>{
     console.log(err);
 });
 
-// acess cluster in the db
-const clusterSchema=new mongoose.Schema({
-    readings:Number,
-    device:String,
-    time:String
 
-});
 
-const Data=mongoose.model('data',clusterSchema);
 
-app.post('/data',async (req,res)=>{
-    try{
-        const newData={
-            readings:req.body.readings,
-            device:req.body.device,
-            time:req.body.time
-        }
-       const data=await Data.create(newData);
-       console.log(data);
-       return res.status(201).send(data);
-    }catch(err){
-        console.log(err.message);
-        res.send(err);
-    }
-}
 
-)
+ 
