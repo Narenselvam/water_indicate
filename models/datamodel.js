@@ -5,7 +5,8 @@ const clusterSchema=new mongoose.Schema({
     readings:Number,
     device:String,
     time:String
-    
+    //Event:raise/fall
+
 });
 
 
