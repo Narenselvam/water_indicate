@@ -6,13 +6,9 @@ from machine import Pin
 import utime
 from config import ssid, password,MONGO_API,API_KEY
 from dataIns import currTime
+from timeSlot import timeSlot
 # import zoneinfo
 # #from DateTime import DateTime
-
-#Defining pin outs
-trigger = Pin(3, Pin.OUT)
-echo = Pin(2, Pin.IN)
-
 
 #Initialing WLAN
 wlan = network.WLAN(network.STA_IF)
@@ -40,35 +36,19 @@ else:
     
 
 def ultra():
- 
-   trigger.low()
-   utime.sleep_us(2)
-   trigger.high()
-   utime.sleep_us(5)
-   trigger.low()
-   while echo.value() == 0:
-       signaloff = utime.ticks_us()
-   while echo.value() == 1:
-       signalon = utime.ticks_us()
-   timepassed = signalon - signaloff
-   distance = (timepassed * 0.0343) / 2
-   currdist=currTime(distance)
+        url = MONGO_API
+        headers = API_KEY
 
-   print("The distance from object is ",distance,"cm")
+        print("sending...")
 
-   url = MONGO_API
-   headers = API_KEY
+        response = requests.post(url, headers=headers, json=timeSlot.getDistance())
 
-   print("sending...")
+        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
 
-   response = requests.post(url, headers=headers, json=currdist.insert())
-
-   print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
-
-   if response.status_code == 201:
-        print("Added Successfully")
-   else:
-       print("Error")
+        if response.status_code == 201:
+                print("Added Successfully")
+        else:
+            print("Error")
 while True:
    ultra()
    utime.sleep(10)
