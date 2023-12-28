@@ -28,7 +28,7 @@ class timeSlot:
         dist=Payload(distance)
         return distance
 
-    def avgDistance(self): #currDsitamce
+    def avgDistance(self): #currDistance
         avgDistance = 0
         for i in range(self.sec):
             avgDistance += self.getDistance()
@@ -36,11 +36,30 @@ class timeSlot:
         avgDistance = avgDistance / self.sec
         dist=Payload(avgDistance)
         return avgDistance
+    
+    def arrDistance(self):
+        temp.append(self.avgDistance)
+        if len(temp)==self.freq:
+            return temp
+
+
         
 class EventDecide:
-    currData=timeSlot(2)
-    
-
+    def __init__(self):
+        """setting Time limit"""
+        currData=timeSlot(0.5) 
+        utime.sleep(30)
+        self.arr=currData.arrDistance()
+        n=len(self.arr)
+        self.threshold=self.arr[n-1]*.80
         
-
-
+    def decsion(self):
+        if self.arr[0]<=self.threshold:
+            export=Payload(self.threshold)
+            res=export.insert()
+        elif self.arr[0]>=self.threshold:
+            export=Payload(self.arr[0])
+            res=export.insert()
+            print("delayed")
+            utime.sleep(120)
+        return res
