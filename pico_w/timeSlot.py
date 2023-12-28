@@ -5,10 +5,15 @@ from dataIns import Payload
 trigger = Pin(3, Pin.OUT)
 echo = Pin(2, Pin.IN)
 
+temp=[]
 
 class timeSlot:
-    def __init__(self,sec):
-        self.sec = sec
+    def __init__(self,freq=1):
+        self.sec = 5
+        self.freq=(freq*60)//5
+        # print("The distance from object is ",self.distance,"cm")
+
+    def getDistance(self):
         trigger.low()
         utime.sleep_us(2)
         trigger.high()
@@ -19,18 +24,23 @@ class timeSlot:
         while echo.value() == 1:
             signalon = utime.ticks_us()
         timepassed = signalon - signaloff
-        self.distance = (timepassed * 0.0343) / 2
-        print("The distance from object is ",self.distance,"cm")
+        distance = (timepassed * 0.0343) / 2
+        dist=Payload(distance)
+        return distance
 
-    def getDistance(self):
-        dist=Payload(self.distance)
-        return dist.insert()
-
-    def avgDistance(self):
+    def avgDistance(self): #currDsitamce
         avgDistance = 0
         for i in range(self.sec):
             avgDistance += self.getDistance()
+            utime.sleep(1)
         avgDistance = avgDistance / self.sec
         dist=Payload(avgDistance)
-        return dist.insert()
+        return avgDistance
         
+class EventDecide:
+    currData=timeSlot(2)
+    
+
+        
+
+

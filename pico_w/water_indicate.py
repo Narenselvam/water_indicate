@@ -5,7 +5,6 @@ import urequests as requests
 from machine import Pin
 import utime
 from config import ssid, password,MONGO_API,API_KEY
-from dataIns import currTime
 from timeSlot import timeSlot
 # import zoneinfo
 # #from DateTime import DateTime
@@ -33,22 +32,26 @@ else:
     status = wlan.ifconfig()
     print( 'ip = ' + status[0] )
     
-    
-
+arr=[]
+time=5
 def ultra():
         url = MONGO_API
         headers = API_KEY
-
         print("sending...")
+        export=timeSlot(5)
+        arr.append(export.avgDistance())
+        if len(arr)==time+1:
+             arr.clear()
+        elif len(arr)==time:
+             print(arr)
+        # response = requests.post(url, headers=headers, json=export.getDistance())
 
-        response = requests.post(url, headers=headers, json=timeSlot.getDistance())
+        # print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
 
-        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
-
-        if response.status_code == 201:
-                print("Added Successfully")
-        else:
-            print("Error")
+        # if response.status_code == 201:
+        #         print("Added Successfully")
+        # else:
+        #     print("Error")
 while True:
    ultra()
-   utime.sleep(10)
+   #utime.sleep(10)
