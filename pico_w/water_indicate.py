@@ -32,18 +32,18 @@ else:
     status = wlan.ifconfig()
     print( 'ip = ' + status[0] )
     
-arr=[]
+# arr=[]
 time=5
+
+
 def ultra():
         url = MONGO_API
         headers = API_KEY
         print("sending...")
-        export=timeSlot(5)
-        arr.append(export.avgDistance())
-        if len(arr)==time+1:
-             arr.clear()
-        elif len(arr)==time:
-             print(arr)
+        export=timeSlot()
+        res=export.arrDistance()
+        if res:
+            print(res)
         # response = requests.post(url, headers=headers, json=export.getDistance())
 
         # print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))

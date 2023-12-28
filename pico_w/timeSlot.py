@@ -5,7 +5,7 @@ from dataIns import Payload
 trigger = Pin(3, Pin.OUT)
 echo = Pin(2, Pin.IN)
 
-temp=[]
+arr=[]
 
 class timeSlot:
     def __init__(self,freq=1):
@@ -36,6 +36,14 @@ class timeSlot:
         avgDistance = avgDistance / self.sec
         dist=Payload(avgDistance)
         return avgDistance
+    
+    def arrDistance(self):
+        # export=timeSlot()
+        arr.append(self.avgDistance())
+        if len(arr)==self.freq+1:
+            arr.clear()
+        elif len(arr)==self.freq:
+            print(arr)
         
 class EventDecide:
     currData=timeSlot(2)
