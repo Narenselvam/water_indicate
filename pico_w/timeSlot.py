@@ -45,24 +45,32 @@ class timeSlot:
         elif len(arr)==self.freq:
             return arr
         
-class EventDecide:
-    def __init__(self):
+class defaultEvent:
+    def __init__(self,n=0.25):
         self.arr=temp
-        self.threshold=0
-        currData=timeSlot(0.25)
+        currData=timeSlot(n)
         self.arr=currData.arrDistance()
 
+    def res_arr(self):
+        return self.arr
+    
+
+class EventDecide:
+    def __init__(self,n=0.25):
+        self.threshold=0
+        self.event=defaultEvent(n)
+
     def EventPredict(self):
-        if(self.arr):
-            n=len(self.arr)
-            self.threshold=self.arr[n-1]*.80
-            if self.arr[0]<=self.threshold:
+        if(self.event.res_arr()):
+            n=len(self.event.res_arr())
+            self.threshold=self.event.res_arr()[n-1]*.80
+            if self.event.res_arr()[0]<=self.threshold:
                 # export=Payload(self.threshold)
                 # res=export.insert()
-                return "Event= drain",self.arr
-            elif self.arr[0]>self.threshold:
+                return "Event= drain",self.event.res_arr()
+            elif self.event.res_arr()[0]>self.threshold:
                 # export=Payload(self.threshold)
                 # res=export.insert()
-                return "Event = rise" ,self.arr
+                return "Event= rise" ,self.arr
 
 
