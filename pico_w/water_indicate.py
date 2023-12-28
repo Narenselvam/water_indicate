@@ -5,7 +5,7 @@ import urequests as requests
 from machine import Pin
 import utime
 from config import ssid, password,MONGO_API,API_KEY
-from timeSlot import timeSlot
+from timeSlot import timeSlot,EventDecide
 # import zoneinfo
 # #from DateTime import DateTime
 
@@ -40,8 +40,8 @@ def ultra():
         url = MONGO_API
         headers = API_KEY
         print("sending...")
-        export=timeSlot()
-        res=export.arrDistance()
+        export=EventDecide()
+        res=export.EventPredict()
         if res:
             print(res)
         # response = requests.post(url, headers=headers, json=export.getDistance())
