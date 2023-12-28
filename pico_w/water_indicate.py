@@ -5,7 +5,8 @@ import urequests as requests
 from machine import Pin
 import utime
 from config import ssid, password,MONGO_API,API_KEY
-from timeSlot import EventDecide
+from timeSlot import timeSlot
+from dataIns import Payload
 # import zoneinfo
 # #from DateTime import DateTime
 
@@ -32,14 +33,36 @@ else:
     status = wlan.ifconfig()
     print( 'ip = ' + status[0] )
     
-arr=[]
+temp=[]
 time=5
+
+def arrDistance(freq):
+    freq=(freq*60)//5
+    time=timeSlot()
+    temp.append(time.avgDistance())
+    if len(temp)==freq:
+        return temp
+    
+def decsion():
+    """setting Time limit"""
+    arr=arrDistance(1)
+    n=len(arr)
+    threshold=arr[n-1]*.80
+    if arr[0]<=threshold:
+        export=Payload(threshold)
+        res=export.insert()
+    elif arr[0]>threshold:
+        export=Payload(arr[0])
+        res=export.insert()
+        print("delayed")
+        utime.sleep(120)
+    return res
+
 def ultra():
         url = MONGO_API
         headers = API_KEY
         print("sending...")
-        export=EventDecide()
-        print(export.decsion())
+        print(decsion())
         # response = requests.post(url, headers=headers, json=export.getDistance())
 
         # print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
